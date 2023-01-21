@@ -1,82 +1,73 @@
 #include "sort.h"
 
 /**
- * quick_sort - partitions sorts by half
- * @array: the array
- * @size: size of length
+ * quick_sort - function that sorts an array of integers
+ *              in ascending order using the Quick sort algorithm
+ * @array: array
+ * @size: array's size
  * Return: void
  */
 void quick_sort(int *array, size_t size)
 {
-	if (size < 2)
+	if (array == NULL || size < 2)
 		return;
 
-	_qsort(array, 0, size - 1, size);
+	quick_s(array, 0, size - 1, size);
 }
 
 /**
- * _qsort - recursively calls itself to move left and right
- * @array: the array
- * @left: left pointer
- * @right: right pointer
- * @size: size of length
- * Return: void
+ * partition - partition
+ * @array: array
+ * @lo: lower
+ * @hi: higher
+ * @size: array's size
+ * Return: i
  */
-void _qsort(int *array, int left, int right, size_t size)
+int partition(int *array, int lo, int hi, size_t size)
 {
-	int index = partition(array, left, right, size);
+	int i = lo - 1, j = lo;
+	int pivot = array[hi], aux = 0;
 
-	if (left >= right)
-		return;
-
-	_qsort(array, left, index - 1, size);
-	_qsort(array, index + 1, right, size);
-}
-
-/**
- * partition - partition sorts by pivot point
- * @array: the array
- * @left: left pointer
- * @right: right pointer
- * @size: size of array length
- * Return: void
- */
-size_t partition(int *array, int left, int right, size_t size)
-{
-	int pivot = array[right];
-	int i = left, j = 0;
-
-	for (j = left; j < right; j++)
+	for (; j < hi; j++)
 	{
 		if (array[j] < pivot)
 		{
-			if (i != j && array[i] != array[j])
+			i++;
+			if (array[i] != array[j])
 			{
-				swap(array, i, j);
+				aux = array[i];
+				array[i] = array[j];
+				array[j] = aux;
 				print_array(array, size);
 			}
-			i++;
 		}
 	}
-	if (i != right && array[i] != array[j])
+	if (array[i + 1] != array[hi])
 	{
-		swap(array, i, right);
+		aux = array[i + 1];
+		array[i + 1] = array[hi];
+		array[hi] = aux;
 		print_array(array, size);
 	}
-	return (i);
+	return (i + 1);
 }
 
 /**
- * swap - swaps two given indexes
- * @array: the array
- * @left: left pointer
- * @right: right pointer
+ * quick_s - quick sort
+ * @array: given array
+ * @lo: lower
+ * @hi:higher
+ * @size: array's size
  * Return: void
  */
-void swap(int *array, int left, int right)
+void quick_s(int *array, int lo, int hi, size_t size)
 {
-	array[left] += array[right];
-	array[right] = array[left] - array[right];
-	array[left] -= array[right];
-}
+	int pivot;
 
+	if (lo < hi)
+	{
+		pivot = partition(array, lo, hi, size);
+		quick_s(array, lo, pivot - 1, size);
+		quick_s(array, pivot + 1, hi, size);
+	}
+}
